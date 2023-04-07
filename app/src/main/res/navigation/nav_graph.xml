@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskListFragment">
+
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="com.dodemy.roomcrudapp.ui.tasklist.TaskListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_task_list">
+        <action
+            android:id="@+id/action_taskListFragment_to_taskDetailsFragment"
+            app:destination="@id/taskDetailsFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/taskDetailsFragment"
+        android:name="com.dodemy.roomcrudapp.ui.taskdetails.TaskDetailsFragment"
+        android:label="@string/task_details"
+        tools:layout="@layout/fragment_task_details">
+        <argument
+            android:name="taskId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
+</navigation>
+
+
