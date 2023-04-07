@@ -1,4 +1,4 @@
-package com.dodemy.roomcrudapp.ui.taskdetails
+package com.dodemy.roomcrudapp.ui.fragments
 
 //import com.dodemy.roomcrudapp.databinding.FragmentTaskDetailsBinding
 
@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dodemy.roomcrudapp.databinding.FragmentTaskDetailsBinding
+//import com.dodemy.roomcrudapp.ui.taskdetails.TaskDetailsFragmentArgs
+import com.dodemy.roomcrudapp.ui.viewmodels.TaskDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

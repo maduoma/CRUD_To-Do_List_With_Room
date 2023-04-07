@@ -1,9 +1,10 @@
-package com.dodemy.roomcrudapp
+package com.dodemy.roomcrudapp.ui.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import com.dodemy.roomcrudapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import com.dodemy.roomcrudapp.databinding.ActivityMainBinding
 

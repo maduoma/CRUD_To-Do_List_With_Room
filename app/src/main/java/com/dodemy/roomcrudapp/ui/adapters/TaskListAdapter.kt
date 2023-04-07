@@ -1,4 +1,4 @@
-package com.dodemy.roomcrudapp.ui.tasklist
+package com.dodemy.roomcrudapp.ui.adapters
 
 import com.dodemy.roomcrudapp.data.entities.Task
 

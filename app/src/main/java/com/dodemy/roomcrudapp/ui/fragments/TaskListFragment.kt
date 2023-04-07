@@ -1,4 +1,4 @@
-package com.dodemy.roomcrudapp.ui.tasklist
+package com.dodemy.roomcrudapp.ui.fragments
 
 import com.dodemy.roomcrudapp.databinding.FragmentTaskListBinding
 
@@ -10,6 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dodemy.roomcrudapp.ui.adapters.TaskListAdapter
+//import com.dodemy.roomcrudapp.ui.tasklist.TaskListFragmentDirections
+import com.dodemy.roomcrudapp.ui.viewmodels.TaskListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,7 +50,8 @@ class TaskListFragment : Fragment() {
             rvTaskList.adapter = taskListAdapter
 
             fabAddTask.setOnClickListener {
-                val action = TaskListFragmentDirections.actionTaskListFragmentToTaskDetailsFragment(0)
+                val action =
+                    TaskListFragmentDirections.actionTaskListFragmentToTaskDetailsFragment(0)
                 findNavController().navigate(action)
             }
         }

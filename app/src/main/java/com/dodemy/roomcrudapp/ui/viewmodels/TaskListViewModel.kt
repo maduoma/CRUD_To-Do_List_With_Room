@@ -1,4 +1,4 @@
-package com.dodemy.roomcrudapp.ui.tasklist
+package com.dodemy.roomcrudapp.ui.viewmodels
 
 import com.dodemy.roomcrudapp.data.entities.Task
 import com.dodemy.roomcrudapp.repository.TaskRepository

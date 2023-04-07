@@ -1,4 +1,4 @@
-package com.dodemy.roomcrudapp.di
+package com.dodemy.roomcrudapp.di.modules
 
 import com.dodemy.roomcrudapp.data.dao.TaskDao
 import com.dodemy.roomcrudapp.database.AppDatabase
