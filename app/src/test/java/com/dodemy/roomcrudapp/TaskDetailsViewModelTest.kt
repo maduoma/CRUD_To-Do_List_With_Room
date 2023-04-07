@@ -7,23 +7,23 @@ import androidx.lifecycle.Observer
 import com.dodemy.roomcrudapp.data.entities.Task
 import com.dodemy.roomcrudapp.repository.TaskRepository
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.MockitoJUnitRunner
+
+
 
 @ExperimentalCoroutinesApi
+@RunWith(MockitoJUnitRunner::class)
 class TaskDetailsViewModelTest {
-
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -33,19 +33,26 @@ class TaskDetailsViewModelTest {
     @Mock
     private lateinit var taskObserver: Observer<Task?>
 
-    private lateinit var viewModel: TaskDetailsViewModel
+    private val testDispatcher = StandardTestDispatcher()
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private lateinit var viewModel: TaskDetailsViewModel
 
     @Before
     fun setUp() {
-        viewModel = TaskDetailsViewModel(taskRepository).apply {
-            task.observeForever(taskObserver)
-        }
+        Dispatchers.setMain(testDispatcher)
+        viewModel = TaskDetailsViewModel(taskRepository)
+        viewModel.task.observeForever(taskObserver)
     }
 
+    @After
+    fun tearDown() {
+        viewModel.task.removeObserver(taskObserver)
+        Dispatchers.resetMain()
+    }
+
+
     @Test
-    fun fetchTask_existingTask() = testDispatcher.runBlockingTest {
+    fun fetchTask_existingTask() = runTest {
         val taskId = 1
         val task = Task(id = taskId, title = "Test Task", description = "Test description")
         val taskLiveData = MutableLiveData<Task>()
@@ -67,7 +74,7 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
-    fun saveTask_updateExistingTask() = testDispatcher.runBlockingTest {
+    fun saveTask_updateExistingTask() = runTest {
         val taskId = 1
         val task = Task(id = taskId, title = "Test Task", description = "Test description")
         val updatedTitle = "Updated Task"
@@ -88,7 +95,7 @@ class TaskDetailsViewModelTest {
     }
 
     @Test
-    fun saveTask_createNewTask() = testDispatcher.runBlockingTest {
+    fun saveTask_createNewTask() = runTest {
         val title = "New Task Title"
         val description = "New Task Description"
         val isCompleted = false
@@ -99,24 +106,32 @@ class TaskDetailsViewModelTest {
         verify(taskRepository).insertTask(newTask)
     }
 
-//    @Test
-//    fun deleteTask_existingTask() = testDispatcher.runBlockingTest {
-//        val taskId = 1
-//        val task = Task(id = taskId, title = "Test Task", description = "Test description")
-//        viewModel.task.value = task
-//
-//        viewModel.deleteTask()
-//
-//        verify(taskRepository).deleteTask(task)
-//    }
+    @Test
+    fun deleteTask_existingTask() = runTest {
+        val taskId = 1
+        val task = Task(id = taskId, title = "Test Task", description = "Test description")
+        val taskLiveData = MutableLiveData<Task>()
+        taskLiveData.value = task
+        `when`(taskRepository.getTaskById(taskId)).thenReturn(taskLiveData)
 
-//    @Test
-//    fun deleteTask_noTask() = testDispatcher.runBlockingTest {
-//        viewModel.task.value = null
-//
-//        viewModel.deleteTask()
-//
-//        verifyNoMoreInteractions(taskRepository)
-//    }
+        viewModel.fetchTask(taskId)
+        viewModel.deleteTask()
+
+        verify(taskRepository).deleteTask(task)
+    }
+
+    @Test
+    fun deleteTask_noTask() = runTest {
+        // Set the task LiveData value to null
+        val taskLiveData = MutableLiveData<Task>()
+        taskLiveData.value = null
+        `when`(taskRepository.getTaskById(anyInt())).thenReturn(taskLiveData)
+
+        // Attempt to delete the task
+        viewModel.deleteTask()
+
+        // Verify the deleteTask method was not called
+        verify(taskRepository, never()).deleteTask(any())
+    }
 }
 
