@@ -1,6 +1,5 @@
 package com.dodemy.roomcrudapp.ui.fragments
 
-//import com.dodemy.roomcrudapp.databinding.FragmentTaskDetailsBinding
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +14,8 @@ import com.dodemy.roomcrudapp.databinding.FragmentTaskDetailsBinding
 //import com.dodemy.roomcrudapp.ui.taskdetails.TaskDetailsFragmentArgs
 import com.dodemy.roomcrudapp.ui.viewmodels.TaskDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.appcompat.app.AlertDialog
+import com.dodemy.roomcrudapp.R
 
 
 @AndroidEntryPoint
@@ -61,12 +62,15 @@ class TaskDetailsFragment : Fragment() {
                 if (task != null) {
                     btnDeleteTask.visibility = View.VISIBLE
                     btnDeleteTask.setOnClickListener {
-                        viewModel.deleteTask()
-                        findNavController().navigateUp()
+                        showDeleteConfirmationDialog { confirmed ->
+                            if (confirmed) {
+                                viewModel.deleteTask {
+                                    findNavController().navigateUp()
+                                }
+                            }
+                        }
                     }
                 }
-                // Call validateInput to initialize the save button's state
-                validateInput()
             }
         }
     }
@@ -80,4 +84,17 @@ class TaskDetailsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+    private fun showDeleteConfirmationDialog(onResult: (Boolean) -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_task)
+            .setMessage(R.string.delete_task_confirmation)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                onResult(true)
+            }
+            .setNegativeButton(R.string.no) { _, _ ->
+                onResult(false)
+            }
+            .show()
+    }
+
 }

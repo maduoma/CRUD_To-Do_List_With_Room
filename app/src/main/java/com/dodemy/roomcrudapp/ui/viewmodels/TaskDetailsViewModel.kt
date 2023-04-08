@@ -47,11 +47,11 @@ class TaskDetailsViewModel @Inject constructor(
             }
         }
     }
-
-    fun deleteTask() {
+    fun deleteTask(onConfirmed: () -> Unit) {
         _task.value?.let {
             viewModelScope.launch {
                 taskRepository.deleteTask(it)
+                onConfirmed()
             }
         }
     }

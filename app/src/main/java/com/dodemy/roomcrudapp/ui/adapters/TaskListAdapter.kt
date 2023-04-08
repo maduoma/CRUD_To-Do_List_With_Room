@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.dodemy.roomcrudapp.databinding.ItemTaskBinding
 
+import android.content.Context
+import androidx.appcompat.app.AlertDialog
+import com.dodemy.roomcrudapp.R
 
 
 class TaskListAdapter(
@@ -36,10 +39,10 @@ class TaskListAdapter(
                         onItemClickListener(getItem(position))
                     }
                 }
-                btnDeleteTask.setOnClickListener {
+                binding.btnDeleteTask.setOnClickListener {
                     val position = bindingAdapterPosition
                     if (position != RecyclerView.NO_POSITION) {
-                        onDeleteClickListener(getItem(position))
+                        showDeleteConfirmationDialog(binding.root.context, getItem(position))
                     }
                 }
             }
@@ -63,4 +66,19 @@ class TaskListAdapter(
             return oldItem == newItem
         }
     }
+
+    private fun showDeleteConfirmationDialog(context: Context, task: Task) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle(R.string.delete_task)
+        alertDialogBuilder.setMessage(R.string.delete_task_confirmation)
+        alertDialogBuilder.setPositiveButton(R.string.yes) { _, _ ->
+            onDeleteClickListener(task)
+        }
+        alertDialogBuilder.setNegativeButton(R.string.no) { dialog, _ ->
+            dialog.dismiss()
+        }
+        alertDialogBuilder.show()
+    }
+
+
 }
