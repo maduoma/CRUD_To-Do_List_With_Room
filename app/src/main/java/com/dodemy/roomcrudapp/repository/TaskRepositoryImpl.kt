@@ -2,8 +2,9 @@ package com.dodemy.roomcrudapp.repository
 
 import com.dodemy.roomcrudapp.data.dao.TaskDao
 import com.dodemy.roomcrudapp.data.entities.Task
-
+import kotlinx.coroutines.flow.Flow
 import androidx.lifecycle.LiveData
+import java.util.*
 import javax.inject.Inject
 
 class TaskRepositoryImpl @Inject constructor(
@@ -28,5 +29,9 @@ class TaskRepositoryImpl @Inject constructor(
 
     override fun getTaskById(taskId: Int): LiveData<Task> {
         return taskDao.getTaskById(taskId)
+    }
+
+    override fun getActiveTasksWithEndDateGreaterThanOrEqual(date: Date): Flow<List<Task>> {
+        return taskDao.getActiveTasksWithEndDateGreaterThanOrEqual(date)
     }
 }

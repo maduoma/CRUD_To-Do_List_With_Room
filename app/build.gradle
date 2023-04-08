@@ -71,6 +71,10 @@ dependencies {
     // Material Design Components
     implementation 'com.google.android.material:material:1.8.0'
 
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    // For TTS capability within worker
+    implementation 'androidx.work:work-multiprocess:2.8.1'
+
     // Instrumented Testing
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

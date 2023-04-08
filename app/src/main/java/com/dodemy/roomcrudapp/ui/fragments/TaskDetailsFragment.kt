@@ -16,6 +16,9 @@ import com.dodemy.roomcrudapp.ui.viewmodels.TaskDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.app.AlertDialog
 import com.dodemy.roomcrudapp.R
+import java.util.*
+import java.text.SimpleDateFormat
+
 
 
 @AndroidEntryPoint
@@ -45,16 +48,43 @@ class TaskDetailsFragment : Fragment() {
                     etTaskTitle.setText(task.title)
                     etTaskDescription.setText(task.description)
                     cbTaskCompleted.isChecked = task.isCompleted
+                    dpStartDate.init(
+                        task.startDate.year + 1900, task.startDate.month, task.startDate.date
+                    ) { _, _, _, _ -> validateInput() }
+
+                    dpEndDate.init(
+                        task.endDate.year + 1900, task.endDate.month, task.endDate.date
+                    ) { _, _, _, _ -> validateInput() }
+                } else {
+                    val today = Calendar.getInstance()
+
+                    dpStartDate.init(
+                        today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
+                    ) { _, _, _, _ -> validateInput() }
+
+                    dpEndDate.init(
+                        today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH)
+                    ) { _, _, _, _ -> validateInput() }
                 }
 
                 etTaskTitle.doAfterTextChanged { validateInput() }
                 etTaskDescription.doAfterTextChanged { validateInput() }
 
                 btnSaveTask.setOnClickListener {
+                    val startDate = Calendar.getInstance().apply {
+                        set(dpStartDate.year, dpStartDate.month, dpStartDate.dayOfMonth)
+                    }.time
+                    val endDate = Calendar.getInstance().apply {
+                        set(dpEndDate.year, dpEndDate.month, dpEndDate.dayOfMonth)
+                    }.time
+
+                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     viewModel.saveTask(
                         etTaskTitle.text.toString(),
                         etTaskDescription.text.toString(),
-                        cbTaskCompleted.isChecked
+                        cbTaskCompleted.isChecked,
+                        startDate,
+                        endDate
                     )
                     findNavController().navigateUp()
                 }

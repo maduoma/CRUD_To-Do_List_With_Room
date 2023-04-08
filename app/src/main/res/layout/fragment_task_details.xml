@@ -8,23 +8,29 @@
 
     <EditText
         android:id="@+id/etTaskTitle"
+        android:autofillHints="Set your task title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/task_title"
         android:inputType="textCapSentences"
+        app:layout_constraintBottom_toTopOf="@+id/etTaskDescription"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Task Title" />
 
     <EditText
+        android:autofillHints="Describe your task"
         android:id="@+id/etTaskDescription"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/task_description"
         android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etTaskTitle"
         tools:text="Task Description" />
+
 
     <CheckBox
         android:id="@+id/cbTaskCompleted"
@@ -32,7 +38,7 @@
         android:layout_height="wrap_content"
         android:text="@string/task_completed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etTaskDescription"
+        app:layout_constraintTop_toBottomOf="@+id/etTaskDescription"
         tools:checked="true" />
 
     <Button
@@ -42,7 +48,7 @@
         android:enabled="false"
         android:text="@string/save_task"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cbTaskCompleted" />
+        app:layout_constraintTop_toBottomOf="@+id/etTaskDescription" />
 
     <Button
         android:id="@+id/btnDeleteTask"
@@ -52,5 +58,46 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnSaveTask" />
+
+    <TextView
+        android:id="@+id/tvStartDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/start_date"
+        app:layout_constraintBottom_toTopOf="@+id/dpStartDate"
+        app:layout_constraintEnd_toStartOf="@+id/tvEndDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cbTaskCompleted" />
+
+    <TextView
+        android:id="@+id/tvEndDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="@string/end_date"
+        app:layout_constraintBottom_toTopOf="@+id/dpEndDate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvStartDate"
+        app:layout_constraintTop_toBottomOf="@+id/btnSaveTask" />
+
+    <DatePicker
+        android:id="@+id/dpStartDate"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dpEndDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvStartDate" />
+
+    <DatePicker
+        android:id="@+id/dpEndDate"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dpStartDate"
+        app:layout_constraintTop_toBottomOf="@+id/tvEndDate" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

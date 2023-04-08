@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 
@@ -30,18 +31,20 @@ class TaskDetailsViewModel @Inject constructor(
         }
     }
 
-    fun saveTask(title: String, description: String, isCompleted: Boolean) {
+    fun saveTask(title: String, description: String, isCompleted: Boolean,  startDate: Date,
+                 endDate: Date
+    ) {
         val task = task.value
 
         if (task != null) {
             // Update existing task
-            val updatedTask = task.copy(title = title, description = description, isCompleted = isCompleted)
+            val updatedTask = task.copy(title = title, description = description, isCompleted = isCompleted, startDate = startDate,endDate = endDate)
             viewModelScope.launch {
                 taskRepository.updateTask(updatedTask)
             }
         } else {
             // Create a new task
-            val newTask = Task(title = title, description = description, isCompleted = isCompleted)
+            val newTask = Task(title = title, description = description, isCompleted = isCompleted, startDate = startDate, endDate = endDate)
             viewModelScope.launch {
                 taskRepository.insertTask(newTask)
             }
