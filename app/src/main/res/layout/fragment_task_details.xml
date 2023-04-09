@@ -8,9 +8,9 @@
 
     <EditText
         android:id="@+id/etTaskTitle"
-        android:autofillHints="Set your task title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:autofillHints="Set your task title"
         android:hint="@string/task_title"
         android:inputType="textCapSentences"
         app:layout_constraintBottom_toTopOf="@+id/etTaskDescription"
@@ -20,10 +20,10 @@
         tools:text="Task Title" />
 
     <EditText
-        android:autofillHints="Describe your task"
         android:id="@+id/etTaskDescription"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:autofillHints="Describe your task"
         android:hint="@string/task_description"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/task_completed"
+        app:layout_constraintBottom_toTopOf="@+id/tvReminderFrequency"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etTaskDescription"
         tools:checked="true" />
@@ -60,26 +61,43 @@
         app:layout_constraintTop_toBottomOf="@id/btnSaveTask" />
 
     <TextView
-        android:id="@+id/tvStartDate"
-        android:layout_width="0dp"
+        android:id="@+id/tvReminderFrequency"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:text="@string/reminder_frequency"
+        app:layout_constraintBottom_toTopOf="@+id/spReminderFrequency"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cbTaskCompleted"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Spinner
+        android:id="@+id/spReminderFrequency"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/reminder_frequency_spinner"
+        app:layout_constraintBottom_toTopOf="@+id/tvStartDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvReminderFrequency" />
+
+    <TextView
+        android:id="@+id/tvStartDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/start_date"
         app:layout_constraintBottom_toTopOf="@+id/dpStartDate"
-        app:layout_constraintEnd_toStartOf="@+id/tvEndDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cbTaskCompleted" />
+        app:layout_constraintTop_toBottomOf="@+id/spReminderFrequency" />
 
     <TextView
         android:id="@+id/tvEndDate"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="16dp"
         android:text="@string/end_date"
         app:layout_constraintBottom_toTopOf="@+id/dpEndDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvStartDate"
-        app:layout_constraintTop_toBottomOf="@+id/btnSaveTask" />
+        app:layout_constraintTop_toBottomOf="@+id/spReminderFrequency" />
 
     <DatePicker
         android:id="@+id/dpStartDate"

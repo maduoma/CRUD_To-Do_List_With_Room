@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dodemy.roomcrudapp.data.entities.ReminderFrequency
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
@@ -32,19 +33,19 @@ class TaskDetailsViewModel @Inject constructor(
     }
 
     fun saveTask(title: String, description: String, isCompleted: Boolean,  startDate: Date,
-                 endDate: Date
+                 endDate: Date,reminderFrequency: ReminderFrequency
     ) {
         val task = task.value
 
         if (task != null) {
             // Update existing task
-            val updatedTask = task.copy(title = title, description = description, isCompleted = isCompleted, startDate = startDate,endDate = endDate)
+            val updatedTask = task.copy(title = title, description = description, isCompleted = isCompleted, startDate = startDate,endDate = endDate, reminderFrequency = reminderFrequency)
             viewModelScope.launch {
                 taskRepository.updateTask(updatedTask)
             }
         } else {
             // Create a new task
-            val newTask = Task(title = title, description = description, isCompleted = isCompleted, startDate = startDate, endDate = endDate)
+            val newTask = Task(title = title, description = description, isCompleted = isCompleted, startDate = startDate, endDate = endDate, reminderFrequency = reminderFrequency)
             viewModelScope.launch {
                 taskRepository.insertTask(newTask)
             }

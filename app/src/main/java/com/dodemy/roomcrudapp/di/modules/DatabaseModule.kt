@@ -23,8 +23,10 @@ object DatabaseModule {
             AppDatabase::class.java,
             "task_database"
         )
-            .addMigrations(AppDatabase.MIGRATION_1_2) // Add the migration here
+            .addMigrations(AppDatabase.MIGRATION_1_2, AppDatabase.MIGRATION_2_3) // Add the new migration here
             .build()
+//            .addMigrations(AppDatabase.MIGRATION_1_2) // Add the migration here
+//            .build()
     }
 }
 

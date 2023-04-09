@@ -5,19 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.dodemy.roomcrudapp.databinding.FragmentTaskDetailsBinding
-//import com.dodemy.roomcrudapp.ui.taskdetails.TaskDetailsFragmentArgs
 import com.dodemy.roomcrudapp.ui.viewmodels.TaskDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.app.AlertDialog
 import com.dodemy.roomcrudapp.R
 import java.util.*
-import java.text.SimpleDateFormat
+import com.dodemy.roomcrudapp.data.entities.ReminderFrequency
 
 
 
@@ -39,6 +39,13 @@ class TaskDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Initialize reminderFrequencyAdapter
+        reminderFrequencyAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, ReminderFrequency.values())
+        reminderFrequencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spReminderFrequency.adapter = reminderFrequencyAdapter
+
+        // Setup reminder frequency spinner
+        setupReminderFrequencySpinner()
 
         viewModel.fetchTask(args.taskId)
 
@@ -55,7 +62,11 @@ class TaskDetailsFragment : Fragment() {
                     dpEndDate.init(
                         task.endDate.year + 1900, task.endDate.month, task.endDate.date
                     ) { _, _, _, _ -> validateInput() }
-                } else {
+                    // Set the Spinner's selected item to the task's reminderFrequency
+                    binding.spReminderFrequency.setSelection(reminderFrequencyAdapter.getPosition(task.reminderFrequency))
+                }
+
+                else {
                     val today = Calendar.getInstance()
 
                     dpStartDate.init(
@@ -77,14 +88,14 @@ class TaskDetailsFragment : Fragment() {
                     val endDate = Calendar.getInstance().apply {
                         set(dpEndDate.year, dpEndDate.month, dpEndDate.dayOfMonth)
                     }.time
-
-                    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val reminderFrequency = binding.spReminderFrequency.selectedItem as ReminderFrequency
                     viewModel.saveTask(
                         etTaskTitle.text.toString(),
                         etTaskDescription.text.toString(),
                         cbTaskCompleted.isChecked,
                         startDate,
-                        endDate
+                        endDate,
+                        reminderFrequency
                     )
                     findNavController().navigateUp()
                 }
@@ -104,10 +115,23 @@ class TaskDetailsFragment : Fragment() {
             }
         }
     }
+    private lateinit var reminderFrequencyAdapter: ArrayAdapter<ReminderFrequency>
+    private fun setupReminderFrequencySpinner() {
+        binding.spReminderFrequency.adapter = reminderFrequencyAdapter
+//        binding.spReminderFrequency.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//                validateInput()
+//            }
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                validateInput()
+//            }
+//        }
+    }
 
     private fun validateInput() {
         binding.btnSaveTask.isEnabled =
             binding.etTaskTitle.text.isNotEmpty() && binding.etTaskDescription.text.isNotEmpty()
+                    && binding.spReminderFrequency.selectedItemPosition != -1
     }
 
     override fun onDestroyView() {

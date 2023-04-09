@@ -15,4 +15,6 @@
     <string name="end_date">End Date</string>
     <string name="task_reminder_channel_description">Task Reminder Channel Description</string>
     <string name="task_reminder_channel_name">Task Reminder Channel Name</string>
+    <string name="reminder_frequency">Reminder Frequency</string>
+    <string name="reminder_frequency_spinner">Select reminder frequency</string>
 </resources>

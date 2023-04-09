@@ -12,10 +12,10 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 
-import com.dodemy.roomcrudapp.utilities.Converters
+import com.dodemy.roomcrudapp.database.converters.DateConverter
 
-@Database(entities = [Task::class], version = 2, exportSchema = false)
-@TypeConverters(Converters::class)
+@Database(entities = [Task::class], version = 3, exportSchema = false)
+@TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
@@ -30,33 +30,25 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "app_database"
-                )   .addMigrations(MIGRATION_1_2)
+                )   .addMigrations(MIGRATION_1_2, MIGRATION_2_3) // Add the new migration here
                     .build()
                 INSTANCE = instance
                 instance
             }
         }
-
+        @JvmField
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE tasks ADD COLUMN reminder_frequency TEXT NOT NULL DEFAULT 'NONE'")
+            }
+        }
         // Make MIGRATION_1_2 public
         @JvmField
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE tasks ADD COLUMN start_date INTEGER NOT NULL DEFAULT 0")
                 database.execSQL("ALTER TABLE tasks ADD COLUMN end_date INTEGER NOT NULL DEFAULT 0")
-//                database.execSQL("ALTER TABLE tasks RENAME COLUMN startDate TO start_date")
-//                database.execSQL("ALTER TABLE tasks RENAME COLUMN endDate TO end_date")
-//                database.execSQL("ALTER TABLE tasks ADD COLUMN startDate INTEGER NOT NULL DEFAULT 0")
-//                database.execSQL("ALTER TABLE tasks ADD COLUMN endDate INTEGER NOT NULL DEFAULT 0")
             }
         }
-
-//        private val MIGRATION_1_2 = object : Migration(1, 2) {
-//            override fun migrate(database: SupportSQLiteDatabase) {
-//                // Rename the existing columns
-//                database.execSQL("ALTER TABLE tasks RENAME COLUMN startDate TO start_date")
-//                database.execSQL("ALTER TABLE tasks RENAME COLUMN endDate TO end_date")
-//            }
-//        }
-
     }
 }

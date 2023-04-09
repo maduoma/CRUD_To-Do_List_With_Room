@@ -1,26 +1,19 @@
 package com.dodemy.roomcrudapp.workers
 
 import kotlinx.coroutines.flow.first
-//import com.dodemy.roomcrudapp.repository.TaskRepositoryImpl
 import android.content.Context
-//import android.speech.tts.TextToSpeech
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.dodemy.roomcrudapp.database.AppDatabase
-//import dagger.assisted.Assisted
-//import dagger.assisted.AssistedInject
-//import java.util.Locale
+import com.dodemy.roomcrudapp.utils.TtsHelper
 import java.util.Date
-
-//import com.dodemy.roomcrudapp.data.AppDatabase
-//import com.dodemy.roomcrudapp.util.showTaskReminderNotification
-//import kotlinx.coroutines.flow.first
-//import java.util.*
 
 class TaskReminderWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : CoroutineWorker(context, workerParams) {
+
+    private val ttsHelper = TtsHelper(applicationContext) {}
 
     override suspend fun doWork(): Result {
         val currentDate = Date()
@@ -28,14 +21,79 @@ class TaskReminderWorker(
         val activeTasks = taskDao.getActiveTasksWithEndDateGreaterThanOrEqual(currentDate).first()
 
         activeTasks.forEach { task ->
-            if (task.isActiveOn(currentDate)) {
+            if (task.isActiveOn(currentDate) && task.shouldTriggerReminder(currentDate)) {
                 showTaskReminderNotification(applicationContext, task)
+                ttsHelper.speak("${task.title}. ${task.description}")
             }
+//            if (task.isActiveOn(currentDate)) {
+//                showTaskReminderNotification(applicationContext, task)
+//                ttsHelper.speak("${task.title}. ${task.description}")
+//            }
         }
+
+        ttsHelper.shutdown()
 
         return Result.success()
     }
 }
+
+
+//class TaskReminderWorker(
+//    context: Context,
+//    workerParams: WorkerParameters
+//) : CoroutineWorker(context, workerParams) {
+//
+//    private lateinit var ttsHelper: TtsHelper
+//
+//    override suspend fun doWork(): Result {
+//        val currentDate = Date()
+//        val taskDao = AppDatabase.getDatabase(applicationContext).taskDao()
+//        val activeTasks = taskDao.getActiveTasksWithEndDateGreaterThanOrEqual(currentDate).first()
+//
+//        ttsHelper = TtsHelper(applicationContext) {
+//            // Initialize TTS here and speak tasks inside the onInitialized lambda
+//            activeTasks.forEach { task ->
+//                if (task.isActiveOn(currentDate)) {
+//                    showTaskReminderNotification(applicationContext, task)
+//                    ttsHelper.speak(task.title) // Speak the task title
+//                }
+//            }
+//            ttsHelper.shutdown() // Shutdown the TTS helper after using it
+//        }
+//
+//        return Result.success()
+//    }
+//}
+
+
+//import kotlinx.coroutines.flow.first
+//import android.content.Context
+//import androidx.work.CoroutineWorker
+//import androidx.work.WorkerParameters
+//import com.dodemy.roomcrudapp.database.AppDatabase
+//import java.util.Date
+//
+//class TaskReminderWorker(
+//    context: Context,
+//    workerParams: WorkerParameters
+//) : CoroutineWorker(context, workerParams) {
+//
+//    override suspend fun doWork(): Result {
+//        val currentDate = Date()
+//        val taskDao = AppDatabase.getDatabase(applicationContext).taskDao()
+//        val activeTasks = taskDao.getActiveTasksWithEndDateGreaterThanOrEqual(currentDate).first()
+//
+//        activeTasks.forEach { task ->
+//            if (task.isActiveOn(currentDate)) {
+//                showTaskReminderNotification(applicationContext, task)
+//                ttsHelper.speak(task.title) // Add this line to speak the task title
+//            }
+//            ttsHelper.shutdown() // Shutdown the TTS helper after using it
+//        }
+//
+//        return Result.success()
+//    }
+//}
 
 
 //class TaskReminderWorker @AssistedInject constructor(

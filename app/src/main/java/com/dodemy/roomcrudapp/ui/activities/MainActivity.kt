@@ -18,6 +18,8 @@ import com.dodemy.roomcrudapp.R
 import dagger.hilt.android.AndroidEntryPoint
 import com.dodemy.roomcrudapp.databinding.ActivityMainBinding
 import com.dodemy.roomcrudapp.workers.TaskReminderWorker
+import com.dodemy.roomcrudapp.workers.scheduleTaskReminder
+import com.dodemy.roomcrudapp.workers.scheduleTaskReminderEvery10Seconds
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -37,8 +39,14 @@ class MainActivity : AppCompatActivity(), OnInitListener  {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         NavigationUI.setupActionBarWithNavController(this, navHostFragment.navController)
-
+//        scheduleHourlyTaskReminder(this)
+//        scheduleDailyTaskReminder(this)
+//        scheduleTaskReminder(this)
+        scheduleTaskReminderEvery10Seconds(this)
         textToSpeech = TextToSpeech(this, this)
+
+        // Call scheduleTaskReminderWorker
+//        scheduleTaskReminderWorker()
     }
 
     override fun onSupportNavigateUp(): Boolean {

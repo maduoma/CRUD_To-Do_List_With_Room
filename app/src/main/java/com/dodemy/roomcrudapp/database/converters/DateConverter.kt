@@ -1,9 +1,9 @@
-package com.dodemy.roomcrudapp.utilities
+package com.dodemy.roomcrudapp.database.converters
 
 import androidx.room.TypeConverter
 import java.util.Date
 
-class Converters {
+class DateConverter {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {
